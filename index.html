@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia El Güegüense</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2efe9;
+      padding: 2rem;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #8b4513;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: #fff9f0;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.3rem 0;
+      border: none;
+      border-radius: 8px;
+      background: #e0d1b4;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #c2aa84;
+    }
+    .correct {
+      background-color: #a6e6a6 !important;
+    }
+    .incorrect {
+      background-color: #f6a6a6 !important;
+    }
+    .feedback {
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+    .correct-msg {
+      color: green;
+    }
+    .incorrect-msg {
+      color: red;
+    }
+    .disabled {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎭 Trivia: El Güegüense</h1>
+  <div class="container" id="trivia-container"></div>
+
+  <script>
+    const preguntas = [
+      {
+        texto: "¿Qué es El Güegüense?",
+        opciones: ["Una leyenda indígena", "Una obra de teatro satírico", "Una canción folclórica", "Un poema épico"],
+        correcta: 1
+      },
+      {
+        texto: "¿Qué idioma combina la obra?",
+        opciones: ["Inglés y francés", "Español y náhuatl", "Solo español", "Solo náhuatl"],
+        correcta: 1
+      },
+      {
+        texto: "¿Qué representa el personaje de El Güegüense?",
+        opciones: ["La nobleza indígena", "La obediencia al rey", "La astucia del pueblo", "Un espíritu del bosque"],
+        correcta: 2
+      },
+      {
+        texto: "¿Qué mezcla cultural se observa en la obra?",
+        opciones: ["Inca y europea", "Española e indígena", "China y africana", "Griega y maya"],
+        correcta: 1
+      },
+      {
+        texto: "¿En qué siglo se originó El Güegüense?",
+        opciones: ["Siglo XIX", "Siglo XX", "Siglo XVII", "Siglo XV"],
+        correcta: 2
+      },
+      {
+        texto: "¿Dónde se presenta tradicionalmente la obra?",
+        opciones: ["León", "Diriamba", "Estelí", "Managua"],
+        correcta: 1
+      },
+      {
+        texto: "¿Cuál es el género principal de la obra?",
+        opciones: ["Tragedia", "Sátira", "Romance", "Cómico-romántico"],
+        correcta: 1
+      },
+      {
+        texto: "¿Cómo se transmite tradicionalmente la obra?",
+        opciones: ["Por libros", "Por televisión", "De forma oral", "En radio novelas"],
+        correcta: 2
+      },
+      {
+        texto: "¿Qué instrumento se asocia con El Güegüense?",
+        opciones: ["Guitarra eléctrica", "Piano", "Marimba", "Violín"],
+        correcta: 2
+      },
+      {
+        texto: "¿Qué personaje es una autoridad española en la obra?",
+        opciones: ["Don Ambrosio", "Don Panciano", "El Rey León", "Don Forcico"],
+        correcta: 0
+      },
+      {
+        texto: "¿Qué día se celebra la obra tradicionalmente en Diriamba?",
+        opciones: ["19 de julio", "20 de enero", "14 de septiembre", "8 de diciembre"],
+        correcta: 1
+      },
+      {
+        texto: "¿Qué organización reconoció la obra como Patrimonio de la Humanidad?",
+        opciones: ["ONU", "OEA", "UNESCO", "Unión Europea"],
+        correcta: 2
+      },
+      {
+        texto: "¿Qué tipo de crítica hace El Güegüense?",
+        opciones: ["Religiosa", "Política y social", "Romántica", "Mágica"],
+        correcta: 1
+      },
+      {
+        texto: "¿Qué hace El Güegüense para evitar pagar impuestos?",
+        opciones: ["Hiere al corregidor", "Se hace pasar por enfermo", "Usa el engaño y el sarcasmo", "Se va del pueblo"],
+        correcta: 2
+      },
+      {
+        texto: "¿Qué tipo de vestuario usan los personajes?",
+        opciones: ["Ropa moderna", "Trajes típicos y máscaras", "Uniformes militares", "Disfraces de animales"],
+        correcta: 1
+      },
+      {
+        texto: "¿Qué hace especial a El Güegüense en América Latina?",
+        opciones: ["Es completamente improvisada", "Es la única obra escrita por un español", "Es una de las primeras expresiones del teatro mestizo", "Es escrita en inglés antiguo"],
+        correcta: 2
+      },
+      {
+        texto: "¿Qué papel tiene Don Forcico en la obra?",
+        opciones: ["Rey", "Sirviente del corregidor", "Hijo del Güegüense", "Mensajero"],
+        correcta: 2
+      },
+      {
+        texto: "¿Cuál es el tono principal de la obra?",
+        opciones: ["Dramático", "Humorístico", "Terror", "Romance"],
+        correcta: 1
+      },
+      {
+        texto: "¿Qué transmite El Güegüense al pueblo?",
+        opciones: ["Obediencia ciega", "Valentía para resistir el poder", "Sumisión y respeto", "Temor a la autoridad"],
+        correcta: 1
+      },
+      {
+        texto: "¿Por qué se considera una joya del folclore nicaragüense?",
+        opciones: ["Por su duración", "Por su mensaje y riqueza cultural", "Por ser una copia española", "Por su escenografía moderna"],
+        correcta: 1
+      }
+    ];
+
+    const container = document.getElementById('trivia-container');
+
+    preguntas.forEach((pregunta, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const q = document.createElement('div');
+      q.className = 'question';
+      q.textContent = `❓ ${pregunta.texto}`;
+
+      const options = document.createElement('div');
+      options.className = 'options';
+
+      const feedback = document.createElement('div');
+      feedback.className = 'feedback';
+
+      pregunta.opciones.forEach((opcion, idx) => {
+        const btn = document.createElement('button');
+        btn.textContent = opcion;
+        btn.addEventListener('click', () => {
+          if (options.classList.contains('disabled')) return;
+
+          if (idx === pregunta.correcta) {
+            btn.classList.add('correct');
+            feedback.textContent = '✅ Respuesta correcta';
+            feedback.className = 'feedback correct-msg';
+          } else {
+            btn.classList.add('incorrect');
+            feedback.textContent = '❌ Respuesta incorrecta';
+            feedback.className = 'feedback incorrect-msg';
+          }
+
+          options.classList.add('disabled');
+        });
+        options.appendChild(btn);
+      });
+
+      card.appendChild(q);
+      card.appendChild(options);
+      card.appendChild(feedback);
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>
